@@ -115,17 +115,38 @@ textarea {
   margin-top: 1em;
 }
 
-#copy-button, #reword-button {
+#input-count, #copy-button, #reword-button {
   margin: 0 1em;
   padding: 0.5em;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: normal;
   color: white;
-  background-color: #306063;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  position: absolute;
+  justify-content: space-between;
+  letter-spacing: 1.2px;
+}
+
+#input-count {
+  background-color: #ddeeef;
+  color: #306063;
+  bottom: 8%;
+  left: 4%;
+}
+
+#copy-button {
+  background-color: #859e9f;
+  top: 7%;
+  right: 4%;
+}
+
+#reword-button {
+  background-color: #46949a;
+  bottom: 8%;
+  right: 4%;
 }
 
 #copy-button:hover, #reword-button:hover {

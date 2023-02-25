@@ -5,7 +5,7 @@
 <div id="ck-div" contenteditable="true">
     <div id="textarea-container">
         <textarea id="input-text" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
-        <mat-hint align="end"> <span id="counter"></span>/1000</mat-hint>
+        <mat-hint id="input-count" align="end"> <span id="counter"></span>/1000</mat-hint>
         <div id="button-container">
             <button id="copy-button" onclick="copyText()">COPY</button>
             <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>

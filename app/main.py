@@ -29,7 +29,7 @@ def index():
     if request.method == "POST":
         input_text = request.json["input_text"]
         bot = ChatGPT()
-        response = bot.ask('Can you rewrite or reword the following text while retaining its meaning and message? \'{i}\''.format(i = input_text))
+        response = bot.ask('Can you rewrite or reword the following text and condense it to 1000 words or less while retaining its meaning and message? \'{i}\''.format(i = input_text))
         response = str(response)
         # bot.clear_history() # clear the history/context of the ChatGPT instance
         return {"response": response}
