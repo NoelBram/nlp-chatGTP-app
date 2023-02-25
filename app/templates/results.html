@@ -1,16 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div id="ck-div" contenteditable="true">
-    <textarea id="input-text" type="text" rows="10" placeholder="Enter your text here or paste text (CTRL + V)">{{ response }}</textarea>
-    <button id="copy-button" onclick="copyText()">COPY</button>
-    <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
+    <div id="textarea-container">
+        <textarea id="input-text" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
+        <mat-hint align="end"> <span id="counter"></span>/1000</mat-hint>
+        <div id="button-container">
+            <button id="copy-button" onclick="copyText()">COPY</button>
+            <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
+        </div>
+    </div>
 </div>
-
 {% endblock %}
-
 {% block scripts %}
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+<script src="https://unpkg.com/@grammarly/editor-sdk?clientId=client_VbdmRdCxrLXjYTXtbXgeCy"></script>
 <script>
+    // Create a classic editor instance
+    // ClassicEditor.create(document.getElementById("ck-div"));
+
+    // // Configure the Grammarly Text Editor SDK
+    // document.querySelectorAll("div[contenteditable=true]").forEach((grammarlyEditor) => {
+    //     grammarlyEditor.setAttribute('data-gramm', 'true');
+    //     grammarlyEditor.setAttribute('data-gramm-editor', 'true');
+    //     grammarlyEditor.setAttribute('data-gramm-grammar', 'sentences');
+    //     grammarlyEditor.setAttribute('data-gramm-sentence', 'true');
+    //     grammarlyEditor.setAttribute('data-gramm-spelling', 'true');
+    //     grammarlyEditor.setAttribute('data-gramm-punctuation', 'true');
+    //     grammarlyEditor.config = { autocomplete: "on", documentDialect: "english" };
+    // });
+
+    window.onload = function() {
+        document.getElementById("input-text").addEventListener("input", function() {
+        var inputLength = this.value.length;
+        var maxLength = this.getAttribute("maxlength");
+        document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
+        });
+
+        var inputLength = document.getElementById("input-text").value.length;
+        var maxLength = document.getElementById("input-text").getAttribute("maxlength");
+        document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
+    }
+
     function rewordText() {
         var input = document.getElementById("input-text").value;
         document.getElementById("input-text").placeholder = "Rewrite/Rewording the following text while retaining its meaning and message...";
@@ -23,6 +55,7 @@
                 var response = JSON.parse(xhr.responseText).response;
                 document.getElementById("input-text").value = response;
                 document.getElementById("input-text").placeholder = "Enter your text here or paste text (CTRL + V)";
+                updateCounter();
             }
         };
         xhr.send(JSON.stringify({input_text: input}));
@@ -31,6 +64,10 @@
         var textArea = document.getElementById("input-text");
         textArea.select();
         document.execCommand("copy");
+    }
+    function updateCounter() {
+        var length = document.getElementById("input-text").value.length;
+        document.getElementById("counter").textContent = length;
     }
 
 </script>
