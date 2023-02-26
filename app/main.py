@@ -12,7 +12,8 @@ matplotlib.use('Agg')
 
 from threading import Lock
 
-from chatGTP_wrapper import *
+import os
+import openai
 
 # Suppress warnings
 warnings.filterwarnings('ignore')
@@ -29,12 +30,18 @@ thread_lock = Lock()
 def index():
     if request.method == "POST":
         input_text = request.json["input_text"]
-        bot = ChatGPT()
-        response = bot.ask('Can you rewrite or reword the following text and condense it to 1000 words or less while retaining its meaning and message? \'{i}\''.format(i = input_text))
-        response = str(response)
-        # bot.clear_history() # clear the history/context of the ChatGPT instance
-        print(response)
-        return {"response": response}
+        openai.organization = "org-YpgyJTbeI03z5AzIC1R0XSF7"
+        openai.api_key = os.getenv("")
+
+        prompt='Can you rewrite or reword the following text and condense it to be less than 1000 words while retaining its meaning and message? \'{i}\''.format(i = input_text)
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=prompt,
+            max_tokens=50
+        )
+        generated_text = response.choices[0].text
+        print(generated_text)
+        return {"response": generated_text}
     return render_template('results.html')
 
 if __name__ == '__main__':
