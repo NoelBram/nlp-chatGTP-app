@@ -1,4 +1,5 @@
 # Flask imports
+import requests
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
 
@@ -32,6 +33,7 @@ def index():
         response = bot.ask('Can you rewrite or reword the following text and condense it to 1000 words or less while retaining its meaning and message? \'{i}\''.format(i = input_text))
         response = str(response)
         # bot.clear_history() # clear the history/context of the ChatGPT instance
+        print(response)
         return {"response": response}
     return render_template('results.html')
 

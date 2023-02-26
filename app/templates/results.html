@@ -1,34 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="textarea-container">
-    <textarea id="input-text" contenteditable="true" rows="17" maxlength="1000" placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
-    <mat-hint id="input-count" align="end"><span id="counter"></span>/ 1000</mat-hint>
+
+<grammarly-editor-plugin contenteditable="true">
+    <textarea id="input-text" contenteditable="true" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
+    <mat-hint id="input-count" align="end"> <span id="counter"></span>/1000</mat-hint>
     <div id="button-container">
         <button id="copy-button" onclick="copyText()">COPY</button>
         <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
     </div>
-</div>
+</grammarly-editor-plugin>
 {% endblock %}
 {% block scripts %}
 <script src="https://unpkg.com/@grammarly/editor-sdk?clientId=client_VbdmRdCxrLXjYTXtbXgeCy"></script>
-<!-- <script src="https://unpkg.com/@grammarly/editor-sdk@2.3.9?clientId=client_9m1fYK3MPQxwKsib5CxtpB"></script> -->
 <script>
-    const grammarly = new Grammarly();
-
-    const inputText = document.getElementById("input-text");
-
-    grammarly.activate(inputText);
+    // Configure the Grammarly Text Editor SDK
+    document.querySelectorAll("div[contenteditable=true]").forEach((grammarlyEditor) => {
+        grammarlyEditor.setAttribute('data-gramm', 'true');
+        grammarlyEditor.setAttribute('data-gramm-editor', 'true');
+        grammarlyEditor.setAttribute('data-gramm-grammar', 'sentences');
+        grammarlyEditor.setAttribute('data-gramm-sentence', 'true');
+        grammarlyEditor.setAttribute('data-gramm-spelling', 'true');
+        grammarlyEditor.setAttribute('data-gramm-punctuation', 'true');
+        grammarlyEditor.config = { autocomplete: "on", documentDialect: "english" };
+    });
 
     window.onload = function() {
-        inputText.addEventListener("input", function() {
-            var inputLength = inputText.textContent.length;
-            var maxLength = inputText.getAttribute("maxlength");
-            document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
+        document.getElementById("input-text").addEventListener("input", function() {
+        var inputLength = this.value.length;
+        var maxLength = this.getAttribute("maxlength");
+        document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
         });
 
-        var inputLength = inputText.textContent.length;
-        var maxLength = inputText.getAttribute("maxlength");
+        var inputLength = document.getElementById("input-text").value.length;
+        var maxLength = document.getElementById("input-text").getAttribute("maxlength");
         document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
     }
 

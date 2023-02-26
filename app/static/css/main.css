@@ -88,7 +88,7 @@ html, body {
   padding: 0;
 }
 
-#textarea-container {
+grammarly-editor-plugin {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,20 +133,20 @@ textarea {
 #input-count {
   background-color: #ddeeef;
   color: #306063;
-  bottom: 8%;
-  left: 4%;
+  bottom: 30px;
+  left: 50px;
 }
 
 #copy-button {
   background-color: #859e9f;
-  top: 7%;
-  right: 4%;
+  top: 40px;
+  right: 50px;
 }
 
 #reword-button {
   background-color: #46949a;
-  bottom: 8%;
-  right: 4%;
+  bottom: 30px;
+  right: 70px;
 }
 
 #copy-button:hover, #reword-button:hover {
