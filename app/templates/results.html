@@ -1,45 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div id="ck-div" contenteditable="true">
-    <div id="textarea-container">
-        <textarea id="input-text" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
-        <mat-hint id="input-count" align="end"> <span id="counter"></span>/1000</mat-hint>
-        <div id="button-container">
-            <button id="copy-button" onclick="copyText()">COPY</button>
-            <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
-        </div>
+<div id="textarea-container">
+    <textarea id="input-text" contenteditable="true" rows="17" maxlength="1000" placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
+    <mat-hint id="input-count" align="end"><span id="counter"></span>/ 1000</mat-hint>
+    <div id="button-container">
+        <button id="copy-button" onclick="copyText()">COPY</button>
+        <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
     </div>
 </div>
 {% endblock %}
 {% block scripts %}
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 <script src="https://unpkg.com/@grammarly/editor-sdk?clientId=client_VbdmRdCxrLXjYTXtbXgeCy"></script>
+<!-- <script src="https://unpkg.com/@grammarly/editor-sdk@2.3.9?clientId=client_9m1fYK3MPQxwKsib5CxtpB"></script> -->
 <script>
-    // Create a classic editor instance
-    // ClassicEditor.create(document.getElementById("ck-div"));
+    const grammarly = new Grammarly();
 
-    // // Configure the Grammarly Text Editor SDK
-    // document.querySelectorAll("div[contenteditable=true]").forEach((grammarlyEditor) => {
-    //     grammarlyEditor.setAttribute('data-gramm', 'true');
-    //     grammarlyEditor.setAttribute('data-gramm-editor', 'true');
-    //     grammarlyEditor.setAttribute('data-gramm-grammar', 'sentences');
-    //     grammarlyEditor.setAttribute('data-gramm-sentence', 'true');
-    //     grammarlyEditor.setAttribute('data-gramm-spelling', 'true');
-    //     grammarlyEditor.setAttribute('data-gramm-punctuation', 'true');
-    //     grammarlyEditor.config = { autocomplete: "on", documentDialect: "english" };
-    // });
+    const inputText = document.getElementById("input-text");
+
+    grammarly.activate(inputText);
 
     window.onload = function() {
-        document.getElementById("input-text").addEventListener("input", function() {
-        var inputLength = this.value.length;
-        var maxLength = this.getAttribute("maxlength");
-        document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
+        inputText.addEventListener("input", function() {
+            var inputLength = inputText.textContent.length;
+            var maxLength = inputText.getAttribute("maxlength");
+            document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
         });
 
-        var inputLength = document.getElementById("input-text").value.length;
-        var maxLength = document.getElementById("input-text").getAttribute("maxlength");
+        var inputLength = inputText.textContent.length;
+        var maxLength = inputText.getAttribute("maxlength");
         document.querySelector("#textarea-container mat-hint").innerHTML = inputLength + "/" + maxLength;
     }
 
