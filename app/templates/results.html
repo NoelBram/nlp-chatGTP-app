@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="table">
+    <grammarly-editor-plugin contenteditable="true">
+        <textarea id="input-text" contenteditable="true" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
+        <mat-hint id="input-count" align="end"> <span id="counter"></span>/1000</mat-hint>
+        <div id="button-container">
+            <button id="copy-button" onclick="copyText()">COPY</button>
+            <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
+        </div>
+    </grammarly-editor-plugin>
+</div>
 
-<grammarly-editor-plugin contenteditable="true">
-    <textarea id="input-text" contenteditable="true" type="text" rows="17" maxlength="1000" required placeholder="Enter your text here or paste text (CTRL + V)" oninput="updateCounter()">{{ response }}</textarea>
-    <mat-hint id="input-count" align="end"> <span id="counter"></span>/1000</mat-hint>
-    <div id="button-container">
-        <button id="copy-button" onclick="copyText()">COPY</button>
-        <button id="reword-button" onclick="rewordText()">Reword with chatGTP</button>
-    </div>
-</grammarly-editor-plugin>
+<div id="image-track" data-mouse-down-at="0" data-prev-percentage="0">
+    <img class="image" src="https://images.unsplash.com/photo-1524781289445-ddf8f5695861?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1610194352361-4c81a6a8967e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1674&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1618202133208-2907bebba9e1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1495805442109-bf1cf975750b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1548021682-1720ed403a5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1496753480864-3e588e0269b3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2134&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1613346945084-35cccc812dd5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1759&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+    <img class="image" src="https://images.unsplash.com/photo-1516681100942-77d8e7f9dd97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" draggable="false" onClick="zoomImage(this.src)"/>
+</div>
+
 {% endblock %}
 {% block scripts %}
 <script src="https://unpkg.com/@grammarly/editor-sdk?clientId=client_VbdmRdCxrLXjYTXtbXgeCy"></script>
@@ -64,5 +77,90 @@
         document.getElementById("counter").textContent = length;
     }
 
+    // var currentImageIndex = 0;
+    // var images = document.querySelectorAll('.image');
+    // var track = document.getElementById('image-track');
+
+    // function slideImage(event) {
+    //     if (event.keyCode === 37) {
+    //     // Left arrow key pressed
+    //     currentImageIndex = (currentImageIndex === 0) ? images.length - 1 : currentImageIndex - 1;
+    //     } else if (event.keyCode === 39) {
+    //     // Right arrow key pressed
+    //     currentImageIndex = (currentImageIndex === images.length - 1) ? 0 : currentImageIndex + 1;
+    //     } else {
+    //     return;
+    //     }
+
+    //     var percentage = currentImageIndex * -100;
+    //     track.style.transform = `translateX(${percentage}%)`;
+    // }
+
+    // document.addEventListener('keydown', slideImage);
+
+    function zoomImage(src) {
+        // code to set the image as the wallpaper
+        var imageUrl = src; // the URL of the clicked image
+        // Use AJAX to send a request to your Flask app to set the image as the wallpaper
+        // For example, you could use jQuery to send the request:
+        $.ajax({
+            type: 'POST',
+            url: '/set_wallpaper',
+            data: JSON.stringify({ 'image_url': imageUrl }),
+            contentType: 'application/json',
+            success: function(data) {
+                alert('Wallpaper set!');
+            },
+            error: function(xhr, status, error) {
+                alert('There was an error setting the wallpaper.');
+            }
+        });
+    }
+    
+    const track = document.getElementById("image-track");
+
+    const handleOnDown = e => track.dataset.mouseDownAt = e.clientX;
+
+    const handleOnUp = () => {
+    track.dataset.mouseDownAt = "0";  
+    track.dataset.prevPercentage = track.dataset.percentage;
+    }
+
+    const handleOnMove = e => {
+    if(track.dataset.mouseDownAt === "0") return;
+    
+    const mouseDelta = parseFloat(track.dataset.mouseDownAt) - e.clientX,
+            maxDelta = window.innerWidth / 2;
+    
+    const percentage = (mouseDelta / maxDelta) * -100,
+            nextPercentageUnconstrained = parseFloat(track.dataset.prevPercentage) + percentage,
+            nextPercentage = Math.max(Math.min(nextPercentageUnconstrained, 0), -100);
+    
+    track.dataset.percentage = nextPercentage;
+    
+    track.animate({
+        transform: `translate(${nextPercentage}%, -50%)`
+    }, { duration: 1200, fill: "forwards" });
+    
+    for(const image of track.getElementsByClassName("image")) {
+        image.animate({
+        objectPosition: `${100 + nextPercentage}% center`
+        }, { duration: 1200, fill: "forwards" });
+    }
+    }
+
+    /* -- Had to add extra lines for touch events -- */
+
+    window.onmousedown = e => handleOnDown(e);
+
+    window.ontouchstart = e => handleOnDown(e.touches[0]);
+
+    window.onmouseup = e => handleOnUp(e);
+
+    window.ontouchend = e => handleOnUp(e.touches[0]);
+
+    window.onmousemove = e => handleOnMove(e);
+
+    window.ontouchmove = e => handleOnMove(e.touches[0]);
 </script>
 {% endblock %}
